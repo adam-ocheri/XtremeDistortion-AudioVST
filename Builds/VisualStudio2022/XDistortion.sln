@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio Version 17
+
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XDistortion - VST3", "XDistortion_VST3.vcxproj", "{E4F3C1C2-3189-9977-83BB-EE929A036910}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C3E78F80-54BF-0F72-96DF-1AF721386E76} = {C3E78F80-54BF-0F72-96DF-1AF721386E76}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XDistortion - Shared Code", "XDistortion_SharedCode.vcxproj", "{C3E78F80-54BF-0F72-96DF-1AF721386E76}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E4F3C1C2-3189-9977-83BB-EE929A036910}.Debug|x64.ActiveCfg = Debug|x64
+		{E4F3C1C2-3189-9977-83BB-EE929A036910}.Debug|x64.Build.0 = Debug|x64
+		{E4F3C1C2-3189-9977-83BB-EE929A036910}.Release|x64.ActiveCfg = Release|x64
+		{E4F3C1C2-3189-9977-83BB-EE929A036910}.Release|x64.Build.0 = Release|x64
+		{C3E78F80-54BF-0F72-96DF-1AF721386E76}.Debug|x64.ActiveCfg = Debug|x64
+		{C3E78F80-54BF-0F72-96DF-1AF721386E76}.Debug|x64.Build.0 = Debug|x64
+		{C3E78F80-54BF-0F72-96DF-1AF721386E76}.Release|x64.ActiveCfg = Release|x64
+		{C3E78F80-54BF-0F72-96DF-1AF721386E76}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
