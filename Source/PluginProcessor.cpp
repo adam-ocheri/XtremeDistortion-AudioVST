@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "Fractalizer.h"
 
 //==============================================================================
 XDistortionAudioProcessor::XDistortionAudioProcessor()
@@ -25,7 +26,7 @@ XDistortionAudioProcessor::XDistortionAudioProcessor()
     ValueTreeState = std::make_unique<juce::AudioProcessorValueTreeState>(*this, nullptr);
 
     ValueTreeState.get()->createAndAddParameter("Drive", "Drive", "Drive", juce::NormalisableRange<float>(0.0f, 1.0f, 0.00001f), 1.0f, nullptr, nullptr);
-    ValueTreeState.get()->createAndAddParameter("Range", "Range", "Range", juce::NormalisableRange<float>(0.0f, 300.0f, 0.00001f), 1.0f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Range", "Range", "Range", juce::NormalisableRange<float>(0.0f, 3000.0f, 0.00001f), 1.0f, nullptr, nullptr);
     ValueTreeState.get()->createAndAddParameter("Mix", "Mix", "Mix", juce::NormalisableRange<float>(0.0f, 1.0f, 0.00001f), 1.0f, nullptr, nullptr);
     ValueTreeState.get()->createAndAddParameter("Volume", "Volume", "Volume", juce::NormalisableRange<float>(0.0f, 3.0f, 0.00001f), 1.0f, nullptr, nullptr);
 
@@ -161,23 +162,102 @@ void XDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
+
+    // Pi value
     const float PI = std::atanf(1.0f) * 4;
     float drive = *ValueTreeState.get()->getRawParameterValue("Drive");
     float range = *ValueTreeState.get()->getRawParameterValue("Range");
     float mix = *ValueTreeState.get()->getRawParameterValue("Mix");
     float volume = *ValueTreeState.get()->getRawParameterValue("Volume");
 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+    double X_min = -2.5;
+    double X_max = 1.5;
+    double Y_min = -2;
+    double Y_max = 2;
+    int Width = 1000;
+    int Height = 1000;
+    int MaxIteration = 100;
+    int levelOfDetail = 2;
+
+
+    Fractalizer* Fractal = new Fractalizer(totalNumInputChannels, buffer.getNumSamples());
+    Fractal->Fractalize();
+
+
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
+        auto* channelData = buffer.getWritePointer(channel);
+        
+        //calculate fractals
+        /*
+        for (int i = 0; i < Height; ++i)
+        {
+            for (int j = 0; j < Width; ++j)
+            {
 
+                double X = X_min + j * (X_max - X_min) / Width;
+                double Y = Y_min + i * (Y_max - Y_min) / Height;
+
+                std::complex<double> c(X, Y);
+
+
+                std::complex<double> z = 0;
+
+                for (int k = 0; k < MaxIteration; ++k)
+                {
+                    z = z * z + c;
+                    if (std::abs(z) > levelOfDetail)
+                    {
+                        fractal = k;
+                    }
+                    else
+                    {
+                        fractal = MaxIteration;
+                    }
+
+                    // decipher next iteration:
+                    
+                    auto* nextIter = channelData;
+                    auto* prevIter = channelData;
+
+                    switch (direction) {
+                    case 1:
+                        nextIter = channelData + 1;
+                        if (!nextIter) direction = -1;
+                        break;
+                    case -1:
+                        prevIter = channelData - 1;
+                        if (!prevIter) direction = 1;
+                        break;
+                    }
+
+                    nextIter = nullptr;
+                    prevIter = nullptr;
+
+                    switch (direction) {
+                    case 1:
+                        channelData++;
+                        break;
+                    case -1:
+                        channelData--;
+                        break;
+                    }
+                    
+                }
+            }
+        }
+        */
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
+            // Process Audio manipulation
             float cleanSignal = *channelData;
-
-            *channelData *= drive * range;                                                                          // Overdrive the sample
+            *channelData *= (drive * range) * (Fractal->Fractals[1][sample]);                                                            // Overdrive the sample
             float distortedSignal = (2.0f / PI) * atan(*channelData);                                               // Clip the sample within the +1 to -1 range
             *channelData = ((distortedSignal * mix + (cleanSignal * (1.0f - mix))) / 2.0f) * volume;                // Interpolate Dry/Wet value (get the avg. of the two signals)
+
+            
 
             channelData++;
         }
