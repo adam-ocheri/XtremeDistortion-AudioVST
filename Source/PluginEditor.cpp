@@ -17,7 +17,7 @@ XDistortionAudioProcessorEditor::XDistortionAudioProcessorEditor (XDistortionAud
     Knob_Drive = std::make_unique<juce::Slider>("Drive");
     Knob_Range = std::make_unique<juce::Slider>("Range");
     Knob_Mix = std::make_unique<juce::Slider>("Mix");
-    Knob_Volume = std::make_unique<juce::Slider>("Volume");
+    Knob_Volume = std::make_unique<juce::Slider>("XFractal");
 
     addAndMakeVisible(Knob_Drive.get());
     addAndMakeVisible(Knob_Range.get());
@@ -38,7 +38,7 @@ XDistortionAudioProcessorEditor::XDistortionAudioProcessorEditor (XDistortionAud
     Attachment_Drive = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.GetValueTreeState(), "Drive", *Knob_Drive.get());
     Attachment_Range = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.GetValueTreeState(), "Range", *Knob_Range.get());
     Attachment_Mix = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.GetValueTreeState(), "Mix", *Knob_Mix.get());
-    Attachment_Volume = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.GetValueTreeState(), "Volume", *Knob_Volume.get());
+    Attachment_Volume = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.GetValueTreeState(), "XFractal", *Knob_Volume.get());
 
     // Initialize Knobs position and layout values
     knobWidth = 100;
@@ -70,11 +70,12 @@ void XDistortionAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
+    
     //g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
     g.drawText("Drive", driveKnobXPos, getHeight() / 2 + 5, knobWidth, knobHeight, juce::Justification::centred, false);
     g.drawText("Range", rangeKnobXPos, getHeight() / 2 + 5, knobWidth, knobHeight, juce::Justification::centred, false);
     g.drawText("Mix", mixKnobXPos, getHeight() / 2 + 5, knobWidth, knobHeight, juce::Justification::centred, false);
-    g.drawText("Volume", volumeKnobXPos, getHeight() / 2 + 5, knobWidth, knobHeight, juce::Justification::centred, false);
+    g.drawText("X-Fractal", volumeKnobXPos, getHeight() / 2 + 5, knobWidth, knobHeight, juce::Justification::centred, false);
 }
 
 void XDistortionAudioProcessorEditor::resized()
