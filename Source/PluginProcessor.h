@@ -59,6 +59,7 @@ public:
     juce::AudioProcessorValueTreeState& GetValueTreeState();
 private:
 
+    class Fractalizer* Fractal;
     std::unique_ptr<juce::AudioProcessorValueTreeState> ValueTreeState;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (XDistortionAudioProcessor)

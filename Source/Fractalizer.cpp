@@ -8,6 +8,11 @@ Fractalizer::Fractalizer(int height, int width) : Height(height), Width(width)
 {
 }
 
+Fractalizer::Fractalizer(int height, int width, double x_min, double x_max, double y_min, double y_max, float max_iter)
+	: Height(height), Width(width), X_min(x_min), X_max(x_max), Y_min(y_min), Y_max(y_max), MaxIteration(max_iter)
+{
+}
+
 int Fractalizer::Mandelbrot(std::complex<double>& c, int max_iter)
 {
 	std::complex<double> z = 0;

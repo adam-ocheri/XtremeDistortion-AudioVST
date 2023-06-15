@@ -23,8 +23,10 @@ XDistortionAudioProcessor::XDistortionAudioProcessor()
                        )
 #endif
 {
+    // Get All Sliders States
     ValueTreeState = std::make_unique<juce::AudioProcessorValueTreeState>(*this, nullptr);
 
+    // - - - - Drive Parameters
     ValueTreeState.get()->createAndAddParameter("Drive", "Drive", "Drive", juce::NormalisableRange<float>(0.1f, 1.0f, 0.000001f), 1.0f, nullptr, nullptr);
     ValueTreeState.get()->createAndAddParameter("Range", "Range", "Range", juce::NormalisableRange<float>(0.1f, 3000.0f, 0.000001f), 1.0f, nullptr, nullptr);
     ValueTreeState.get()->createAndAddParameter("Mix", "Mix", "Mix", juce::NormalisableRange<float>(0.0f, 1.0f, 0.000001f), 1.0f, nullptr, nullptr);
@@ -34,6 +36,28 @@ XDistortionAudioProcessor::XDistortionAudioProcessor()
     ValueTreeState.get()->state = juce::ValueTree("Range");
     ValueTreeState.get()->state = juce::ValueTree("Mix");
     ValueTreeState.get()->state = juce::ValueTree("XFractal");
+
+    // - - - - Fractal Parameters
+    ValueTreeState.get()->createAndAddParameter("X_Min", "X_Min", "X_Min", juce::NormalisableRange<float>(-2.5f, 1.5f, 0.000001f), -2.5f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("X_Max", "X_Max", "X_Max", juce::NormalisableRange<float>(1.5f, 3.0f, 0.000001f), 1.5f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Y_Min", "Y_Min", "Y_Min", juce::NormalisableRange<float>(-2.0f, 2.0f, 0.000001f), -2.0f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Y_Max", "Y_Max", "Y_Max", juce::NormalisableRange<float>(0.000001f, 3.0f, 0.000001f), 2.0f, nullptr, nullptr);
+
+    ValueTreeState.get()->state = juce::ValueTree("X_Min");
+    ValueTreeState.get()->state = juce::ValueTree("X_Max");
+    ValueTreeState.get()->state = juce::ValueTree("Y_Min");
+    ValueTreeState.get()->state = juce::ValueTree("Y_Max");
+
+    // - - - - Crystal Parameters
+    ValueTreeState.get()->createAndAddParameter("Crystal", "Crystal", "Crystal", juce::NormalisableRange<float>(0.f, 1.f, 0.000001f), 1.f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Multiplier", "Multiplier", "Multiplier", juce::NormalisableRange<float>(1.f, 300.0f, 0.000001f), 1.f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Power", "Power", "Power", juce::NormalisableRange<float>(1.0f, 42.0f, 0.000001f), 1.0f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Complexity", "Complexity", "Complexity", juce::NormalisableRange<float>(10.0f, 200.0f, 1.0f), 100.f, nullptr, nullptr);
+
+    ValueTreeState.get()->state = juce::ValueTree("Crystal");
+    ValueTreeState.get()->state = juce::ValueTree("Multiplier");
+    ValueTreeState.get()->state = juce::ValueTree("Power");
+    ValueTreeState.get()->state = juce::ValueTree("Complexity");
 }
 
 XDistortionAudioProcessor::~XDistortionAudioProcessor()
@@ -165,24 +189,28 @@ void XDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 
     // Pi value
     const float PI = std::atanf(1.0f) * 4;
+
+    // - - Drive params
     float drive = *ValueTreeState.get()->getRawParameterValue("Drive");
     float range = *ValueTreeState.get()->getRawParameterValue("Range");
     float mix = *ValueTreeState.get()->getRawParameterValue("Mix");
     float volume = *ValueTreeState.get()->getRawParameterValue("XFractal");
 
+    // - - Fractal params
+    float x_min = *ValueTreeState.get()->getRawParameterValue("X_Min");
+    float x_max = *ValueTreeState.get()->getRawParameterValue("X_Max");
+    float y_min = *ValueTreeState.get()->getRawParameterValue("Y_Min");
+    float y_max = *ValueTreeState.get()->getRawParameterValue("Y_Max");
+
+    // - - Crystal params
+    float crystal = *ValueTreeState.get()->getRawParameterValue("Crystal");
+    float cMultiplier = *ValueTreeState.get()->getRawParameterValue("Multiplier");
+    float cPower = *ValueTreeState.get()->getRawParameterValue("Power");
+    float cComplexity = *ValueTreeState.get()->getRawParameterValue("Complexity");
+
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-    double X_min = -2.5;
-    double X_max = 1.5;
-    double Y_min = -2;
-    double Y_max = 2;
-    int Width = 1000;
-    int Height = 1000;
-    int MaxIteration = 100;
-    int levelOfDetail = 2;
-
-
-    Fractalizer* Fractal = new Fractalizer(3, buffer.getNumSamples());
+    Fractalizer* Fractal = new Fractalizer(3, buffer.getNumSamples(), x_min, x_max, y_min, y_max, cComplexity);
     Fractal->Fractalize();
 
 
@@ -191,19 +219,23 @@ void XDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
         auto* channelData = buffer.getWritePointer(channel);
         
         float fractal = 0.0f; 
-        float complex = 0.1f;
+        float complex = 0.00001f;
 
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
             //calculate fractal
             //complex = (complex + complex) * (complex + complex);
-            fractal += (Fractal->Fractals[channel + 1][sample] * complex) * volume;
+            complex += 0.00001f;
+
+            float crystallizedSignal = (((cPower) / pow((PI * 2), cPower)) * atan(*channelData * (cMultiplier / (PI * 2)))) * crystal;
+            fractal += sin(Fractal->Fractals[channel + 1][sample] * complex - (crystallizedSignal)) * volume;
 
             // Process Audio manipulation
             float cleanSignal = *channelData;
             *channelData = (*channelData * drive * (range + ((fractal * fractal) * ((PI * 2) * fractal))));                         //* (range + (fractal * fractal));                                                            // Overdrive the sample
             float distortedSignal = (2.0f / PI) * atan(*channelData );                                                  // Clip the sample within the +1 to -1 range
-            *channelData = ((distortedSignal * mix + (cleanSignal * (1.0f - mix))) / 2.0f) * 1;//volume                 // Interpolate Dry/Wet value (get the avg. of the two signals)
+            
+            *channelData = (((distortedSignal * mix) + (cleanSignal * (1.0f - mix))) - (crystallizedSignal * mix) / 2.0f) * 1;//volume                 // Interpolate Dry/Wet value (get the avg. of the two signals)
 
             channelData++;
         }
