@@ -2,6 +2,21 @@
 #include <vector>
 #include <complex>
 
+struct FractalData
+{
+    int Iteration = 0;
+    double Z = 0;
+
+    FractalData() : Iteration(0), Z(0)
+    {}
+    FractalData(int iter) : Iteration(iter), Z(0)
+    {}
+    FractalData(double z) : Iteration(0), Z(z)
+    {}
+    FractalData(int iter, double z) : Iteration(iter), Z(z)
+    {}
+};
+
 class Fractalizer
 {
 public:
@@ -21,9 +36,10 @@ public:
     int levelOfDetail = 2;
 
     std::vector<std::vector<int>> Fractals;
+    std::vector<std::vector<float>> FractalZ;
 
-    int Mandelbrot(std::complex<double>& c, int max_iter);
-
+    FractalData Mandelbrot(std::complex<double>& c, int max_iter);
     void Fractalize();
+    float ForgeCrystal(float prev, float current, float next);
 };
 

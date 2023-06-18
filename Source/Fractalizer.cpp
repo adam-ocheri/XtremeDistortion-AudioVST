@@ -13,7 +13,7 @@ Fractalizer::Fractalizer(int height, int width, double x_min, double x_max, doub
 {
 }
 
-int Fractalizer::Mandelbrot(std::complex<double>& c, int max_iter)
+FractalData Fractalizer::Mandelbrot(std::complex<double>& c, int max_iter)
 {
 	std::complex<double> z = 0;
 
@@ -22,16 +22,17 @@ int Fractalizer::Mandelbrot(std::complex<double>& c, int max_iter)
 		z = z * z + c;
 		if (std::abs(z) > levelOfDetail)
 		{
-			return i;
+			return FractalData(i, z.real());
 		}
 	}
 
-	return max_iter;
+	return FractalData(max_iter);
 }
 
 void Fractalizer::Fractalize()
 {
 	std::vector<std::vector<int>> fractals(Height, std::vector<int>(Width, 0));
+	std::vector<std::vector<float>> fractalZ(Height, std::vector<float>(Width, 0.0f));
 
 	for (int i = 0; i < Height; ++i)
 	{
@@ -41,11 +42,21 @@ void Fractalizer::Fractalize()
 			double Y = Y_min + i * (Y_max - Y_min) / Height;
 			std::complex<double> c(X, Y);
 
-			int iter = Mandelbrot(c, MaxIteration);
+			FractalData Data = Mandelbrot(c, MaxIteration);
+			int iter = Data.Iteration;
+			float z = static_cast<float>(Data.Z);
 
 			fractals[i][j] = iter;
+			fractalZ[i][j] = z;
 		}
 	}
 
 	Fractals = fractals;
+	FractalZ = fractalZ;
+}
+
+float Fractalizer::ForgeCrystal(float prev, float current, float next)
+{
+	float topology = (prev + current + next) / 3.0f;
+	return topology;
 }

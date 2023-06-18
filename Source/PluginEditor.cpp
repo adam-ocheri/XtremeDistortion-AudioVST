@@ -59,7 +59,7 @@ void XDistortionAudioProcessorEditor::paint (juce::Graphics& g)
     g.drawText("X_Min", driveKnobXPos, getHeight() / 2 + 155, knobWidth, knobHeight, juce::Justification::centred, false);
     g.drawText("X_Max", rangeKnobXPos, getHeight() / 2 + 155, knobWidth, knobHeight, juce::Justification::centred, false);
     g.drawText("Y_Min", mixKnobXPos, getHeight() / 2 + 155, knobWidth, knobHeight, juce::Justification::centred, false);
-    g.drawText("Y_Min", volumeKnobXPos, getHeight() / 2 + 155, knobWidth, knobHeight, juce::Justification::centred, false);
+    g.drawText("Y_Max", volumeKnobXPos, getHeight() / 2 + 155, knobWidth, knobHeight, juce::Justification::centred, false);
 
     g.drawText("Crystal", driveKnobXPos, getHeight() / 2 + 310, knobWidth, knobHeight, juce::Justification::centred, false);
     g.drawText("Multiplier", rangeKnobXPos, getHeight() / 2 + 310, knobWidth, knobHeight, juce::Justification::centred, false);
