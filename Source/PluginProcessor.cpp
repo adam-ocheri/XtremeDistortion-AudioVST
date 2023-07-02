@@ -30,7 +30,7 @@ XDistortionAudioProcessor::XDistortionAudioProcessor()
     ValueTreeState.get()->createAndAddParameter("Drive", "Drive", "Drive", juce::NormalisableRange<float>(0.1f, 1.0f, 0.000001f), 1.0f, nullptr, nullptr);
     ValueTreeState.get()->createAndAddParameter("Range", "Range", "Range", juce::NormalisableRange<float>(0.1f, 3000.0f, 0.000001f), 1.0f, nullptr, nullptr);
     ValueTreeState.get()->createAndAddParameter("Mix", "Mix", "Mix", juce::NormalisableRange<float>(0.0f, 1.0f, 0.000001f), 1.0f, nullptr, nullptr);
-    ValueTreeState.get()->createAndAddParameter("XFractal", "XFractal", "XFractal", juce::NormalisableRange<float>(0.000001f, 1.0f, 0.000001f), 0.000001f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("XFractal", "XFractal", "XFractal", juce::NormalisableRange<float>(0.000001f, 2.0f, 0.000001f), 0.000001f, nullptr, nullptr);
 
     ValueTreeState.get()->state = juce::ValueTree("Drive");
     ValueTreeState.get()->state = juce::ValueTree("Range");
@@ -38,21 +38,32 @@ XDistortionAudioProcessor::XDistortionAudioProcessor()
     ValueTreeState.get()->state = juce::ValueTree("XFractal");
 
     // - - - - Fractal Parameters
-    ValueTreeState.get()->createAndAddParameter("X_Min", "X_Min", "X_Min", juce::NormalisableRange<float>(-2.5f, 1.5f, 0.000001f), -0.5f, nullptr, nullptr);
-    ValueTreeState.get()->createAndAddParameter("X_Max", "X_Max", "X_Max", juce::NormalisableRange<float>(1.5f, 3.0f, 0.000001f), 2.25f, nullptr, nullptr);
-    ValueTreeState.get()->createAndAddParameter("Y_Min", "Y_Min", "Y_Min", juce::NormalisableRange<float>(-2.0f, 2.0f, 0.000001f), -1.3f, nullptr, nullptr);
-    ValueTreeState.get()->createAndAddParameter("Y_Max", "Y_Max", "Y_Max", juce::NormalisableRange<float>(0.000001f, 3.0f, 0.000001f), 1.5f, nullptr, nullptr);
-
+    /*
+    ValueTreeState.get()->createAndAddParameter("X_Min", "X_Min", "X_Min", juce::NormalisableRange<float>(-2.5f, 1.5f, 0.000001f), 1.5f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("X_Max", "X_Max", "X_Max", juce::NormalisableRange<float>(1.5f, 3.0f, 0.000001f), 1.5f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Y_Min", "Y_Min", "Y_Min", juce::NormalisableRange<float>(-2.0f, 2.0f, 0.000001f), 0.0f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Y_Max", "Y_Max", "Y_Max", juce::NormalisableRange<float>(0.000001f, 3.0f, 0.000001f), 0.000001f, nullptr, nullptr);
+    */
+    ValueTreeState.get()->createAndAddParameter("X_Min", "X_Min", "X_Min", juce::NormalisableRange<float>(1.4f, 1.6f, 0.000001f), 1.5f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("X_Max", "X_Max", "X_Max", juce::NormalisableRange<float>(1.4f, 1.6f, 0.000001f), 1.5f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Y_Min", "Y_Min", "Y_Min", juce::NormalisableRange<float>(-1.0f, 1.0f, 0.000001f), 0.0f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Y_Max", "Y_Max", "Y_Max", juce::NormalisableRange<float>(-1.0f, 1.0f, 0.000001f), 0.0f, nullptr, nullptr);
+    /*
+    ValueTreeState.get()->createAndAddParameter("X_Min", "X_Min", "X_Min", juce::NormalisableRange<float>(-20000.5f, 10000.5f, 0.000001f), -0.5f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("X_Max", "X_Max", "X_Max", juce::NormalisableRange<float>(10500.5f, 30000.0f, 0.000001f), 2.25f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Y_Min", "Y_Min", "Y_Min", juce::NormalisableRange<float>(-200.0f, 200.0f, 0.000001f), -1.3f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Y_Max", "Y_Max", "Y_Max", juce::NormalisableRange<float>(250.000001f, 3000.0f, 0.000001f), 1.5f, nullptr, nullptr);
+    */
     ValueTreeState.get()->state = juce::ValueTree("X_Min");
     ValueTreeState.get()->state = juce::ValueTree("X_Max");
     ValueTreeState.get()->state = juce::ValueTree("Y_Min");
     ValueTreeState.get()->state = juce::ValueTree("Y_Max");
 
     // - - - - Crystal Parameters
-    ValueTreeState.get()->createAndAddParameter("Crystal", "Crystal", "Crystal", juce::NormalisableRange<float>(0.f, 0.25f, 0.000001f), 0.f, nullptr, nullptr);
-    ValueTreeState.get()->createAndAddParameter("Multiplier", "Multiplier", "Multiplier", juce::NormalisableRange<float>(1.f, 30000.0f, 0.000001f), 1.f, nullptr, nullptr);
-    ValueTreeState.get()->createAndAddParameter("Power", "Power", "Power", juce::NormalisableRange<float>(1.0f, 42.0f, 0.000001f), 1.0f, nullptr, nullptr);
-    ValueTreeState.get()->createAndAddParameter("Complexity", "Complexity", "Complexity", juce::NormalisableRange<float>(10.0f, 200.0f, 1.0f), 100.f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Crystal", "Crystal", "Crystal", juce::NormalisableRange<float>(0.f, 0.5f, 0.000001f), 0.f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Multiplier", "Multiplier", "Multiplier", juce::NormalisableRange<float>(10.f, 1500.0f, 0.000001f), 10.f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Power", "Power", "Power", juce::NormalisableRange<float>(1.0f, 2.0f, 0.000001f), 1.0f, nullptr, nullptr);
+    ValueTreeState.get()->createAndAddParameter("Complexity", "Complexity", "Complexity", juce::NormalisableRange<float>(10.0f, 2000.0f, 1.0f), 100.f, nullptr, nullptr);
 
     ValueTreeState.get()->state = juce::ValueTree("Crystal");
     ValueTreeState.get()->state = juce::ValueTree("Multiplier");
@@ -129,8 +140,7 @@ void XDistortionAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void XDistortionAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    InitAudio(sampleRate, samplesPerBlock);
 }
 
 void XDistortionAudioProcessor::releaseResources()
@@ -190,6 +200,9 @@ void XDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     // Pi value
     const float PI = std::atanf(1.0f) * 4;
 
+    const float sampleRate = static_cast<float>(SampleRate);
+    const float samplesPerBlock = static_cast<float>(SamplesPerBlock);
+
     // - - Drive params
     float drive = *ValueTreeState.get()->getRawParameterValue("Drive");
     float range = *ValueTreeState.get()->getRawParameterValue("Range");
@@ -208,12 +221,11 @@ void XDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     float cPower = *ValueTreeState.get()->getRawParameterValue("Power");
     float cComplexity = *ValueTreeState.get()->getRawParameterValue("Complexity");
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
+    // Parameter Bindings - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     Fractalizer* Fractal = new Fractalizer(3, buffer.getNumSamples(), x_min, x_max, y_min, y_max, cComplexity);
     Fractal->Fractalize();
 
-
+    // Process Audio manipulation
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer(channel);
@@ -229,24 +241,25 @@ void XDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
             complex += 0.00001f * cMultiplier;
             if (sample > 0 && sample < buffer.getNumSamples() - 1)
             {
-                topology *= cMultiplier * Fractal->ForgeCrystal(Fractal->Fractals[channel + 1][sample - 1], 
-                    Fractal->Fractals[channel + 1][sample], 
-                    Fractal->Fractals[channel + 1][sample + 1]
+                topology = Fractal->ForgeCrystal(
+                    Fractal->FractalZ[channel + 1][sample - 1], 
+                    Fractal->FractalZ[channel + 1][sample], 
+                    Fractal->FractalZ[channel + 1][sample + 1]
                 );
             }
-            crystallizedSignal = (Fractal->Fractals[channel + 1][sample] - 1) + (rand() * ((complex * complex) * (cPower * cPower)) * Fractal->Fractals[channel + 1][sample]);//((2.0f / PI) * atan2(cPower ,*channelData)) * cMultiplier * crystal;//((2 / PI)) * atan(*channelData * (cMultiplier / (PI * 2)))) * crystal;
-            //crystallizedSignal = (topology > 0.1f ? topology - 1 : 0) + (rand() * ((complex * complex) * (cPower * cPower)) * (topology > 0 ? topology : 1));
-            //crystallizedSignal = (crystallizedSignal * crystallizedSignal) * cPower;
+            crystallizedSignal = (Fractal->Fractals[channel + 1][sample] - cPower) + (static_cast<float>(rand()) * ((complex * complex) * (cPower * cPower)) * Fractal->Fractals[channel + 1][sample]);
             crystallizedSignal = (2.0f / PI) * atan(crystallizedSignal * cPower);
 
             //calculate fractal
-            fractal += sin(Fractal->Fractals[channel + 1][sample] * complex * powf(Fractal->FractalZ[channel + 1][sample], 2) + (crystallizedSignal * crystal)) * volume;
-            // Process Audio manipulation
+            //fractal = ((fractal + topology + *channelData) + (fractal)) + (((fractal * topology * *channelData) * (fractal)) * ((fractal * topology * *channelData) * (fractal)));
+            fractal += topology + *channelData;
+            fractal *= sin(Fractal->Fractals[channel + 1][sample] * complex * _FCosh(Fractal->FractalZ[channel + 1][sample], topology) /* * topology  * samplesPerBlock*/ + (crystallizedSignal * topology * crystal * fractal)) * volume;
+
+            // Core Audio manipulation processing
             float cleanSignal = *channelData;
-            *channelData = (*channelData * drive * (range + ((fractal * fractal) * ((PI * 2) * fractal))));                         //* (range + (fractal * fractal));                                                            // Overdrive the sample
-            float distortedSignal = (2.0f / PI) * atan(*channelData );                                                  // Clip the sample within the +1 to -1 range
-            
-            *channelData = (((distortedSignal * mix) + (cleanSignal * (1.0f - mix))) / 2.0f) * 1;//volume                 // Interpolate Dry/Wet value (get the avg. of the two signals)
+            *channelData = (*channelData * drive * (range + ((fractal * fractal) * ((PI * 2) * fractal))));                      //* (range + (fractal * fractal));  // Overdrive the sample
+            float distortedSignal = (2.0f / PI) * atan(*channelData);                                                            // Clip the sample within the +1 to -1 range
+            *channelData = (((distortedSignal * mix) + (cleanSignal * (1.0f - mix))) / 2.0f) * 1;//volume                        // Interpolate Dry/Wet value (get the avg. of the two signals)
 
             channelData++;
         }
@@ -291,6 +304,12 @@ void XDistortionAudioProcessor::setStateInformation (const void* data, int sizeI
 juce::AudioProcessorValueTreeState& XDistortionAudioProcessor::GetValueTreeState()
 {
     return *ValueTreeState.get();
+}
+
+void XDistortionAudioProcessor::InitAudio(double sampleRate, int samplesPerBlock)
+{
+    SampleRate = sampleRate;
+    SamplesPerBlock = samplesPerBlock;
 }
 
 //==============================================================================
