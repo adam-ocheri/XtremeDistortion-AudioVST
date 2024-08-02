@@ -247,7 +247,9 @@ void XDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
                     Fractal->FractalZ[channel + 1][sample + 1]
                 );
             }
-            crystallizedSignal = (Fractal->Fractals[channel + 1][sample] - cPower) + (static_cast<float>(rand()) * ((complex * complex) * (cPower * cPower)) * Fractal->Fractals[channel + 1][sample]);
+            crystallizedSignal = (
+                Fractal->Fractals[channel + 1][sample] - cPower) + (static_cast<float>(rand()) * ((complex * complex) * (cPower * cPower)) * Fractal->Fractals[channel + 1][sample]
+            );
             crystallizedSignal = (2.0f / PI) * atan(crystallizedSignal * cPower);
 
             //calculate fractal
@@ -257,13 +259,14 @@ void XDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 
             // Core Audio manipulation processing
             float cleanSignal = *channelData;
-            *channelData = (*channelData * drive * (range + ((fractal * fractal) * ((PI * 2) * fractal))));                      //* (range + (fractal * fractal));  // Overdrive the sample
-            float distortedSignal = (2.0f / PI) * atan(*channelData);                                                            // Clip the sample within the +1 to -1 range
-            *channelData = (((distortedSignal * mix) + (cleanSignal * (1.0f - mix))) / 2.0f) * 1;//volume                        // Interpolate Dry/Wet value (get the avg. of the two signals)
+            *channelData = (*channelData * drive * (range + ((fractal * fractal) * ((PI * 2) * fractal))));               // (range + (fractal * fractal));  // Overdrive the sample
+            float distortedSignal = (2.0f / PI) * atan(*channelData);                                                     // Clip the sample within the +1 to -1 range
+            *channelData = (((distortedSignal * mix) + (cleanSignal * (1.0f - mix))) / 2.0f) * 1;//volume                 // Interpolate Dry/Wet value (get the avg. of the two signals)
 
             channelData++;
         }
     }
+    delete Fractal;
 }
 
 //==============================================================================

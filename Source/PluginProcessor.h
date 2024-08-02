@@ -62,6 +62,8 @@ public:
 
     double SampleRate;
     int SamplesPerBlock;
+    //Fractal Distortion ==============================================================================
+
 private:
 
     //class Fractalizer* Fractal;
